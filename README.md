@@ -6,13 +6,12 @@
 > *Because apparently solving century-old unsolved math problems with a chatbot was a totally necessary use of everyone's time.*
 
 ## Basic Details
-### Team Name: TinkerFluid
+### Team Name: OLISE
 
 
 ### Team Members
-- Team Lead: [Name] - NSS College of Engineering Palakkad
-- Member 2: Sneha Nair - NSS College of Engineering Palakkad
-- Member 3: Stephin Arnold Raj S - NSS College of Engineering Palakkad
+- Team Lead: Sneha Nair - NSS College of Engineering Palakkad
+- Member 2: Stephin Arnold Raj S - NSS College of Engineering Palakkad
 
 ### Project Description
 TinkerFluid is a Streamlit web app that lets you type a fluid mechanics problem in plain English, and then uses an LLM (OpenAI GPT) to extract the physics parameters — and a deterministic Python/SymPy/NumPy engine to actually solve it. It covers Poiseuille flow, Couette flow, pipe flow, and Reynolds number calculations, complete with symbolic derivations, numerical verification, and velocity profile visualizations. Dark mode and light mode included, because science should look good.
@@ -37,8 +36,8 @@ For Software:
 #### Installation
 ```bash
 # Clone the repository
-git clone https://github.com/snehamundakkal/useless_project_olise.git
-cd useless_project_olise/tinker-fluid/navier-stokes-llm-solver
+git clone https://github.com/snehamundakkal/useless_project_Navier-Stokes-Solver.git
+cd useless_project_Navier-Stokes-Solver/tinker-fluid/navier-stokes-llm-solver
 
 # Install dependencies
 pip install -r requirements.txt

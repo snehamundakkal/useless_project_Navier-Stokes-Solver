@@ -83,7 +83,11 @@ For Software:
 
 #### Screenshots
 
-![Main UI - Dark Mode](images/)
+![Main UI - Dark Mode](images/Screenshot 2026-09-12 082523.png)
+![Main UI - Dark Mode](images/Screenshot 2026-09-12 082709.png)
+![Main UI - Dark Mode](images/Screenshot 2026-09-12 082739.png)
+![Main UI - Dark Mode](images/Screenshot 2026-09-12 082853.png)
+![Main UI - Dark Mode](images/Screenshot 2026-09-12 082910.png)
 *The main interface in dark mode — hero title with animated gradient, example problem cards, and the problem input area*
 
 #### Architecture Diagram

@@ -52,215 +52,138 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# ── Theme management ──────────────────────────────────────────────────────────
+if "theme" not in st.session_state:
+    st.session_state.theme = "dark"
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Custom CSS
 # ─────────────────────────────────────────────────────────────────────────────
 
-st.markdown(
-    """
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+def _get_css(theme: str) -> str:
+    """Return full themed CSS ('dark' | 'light')."""
+    is_dark = theme == "dark"
+    if is_dark:
+        rv = """
+        --c-bg:#05080f;--c-bg2:#0a0f20;--c-bg3:#060c18;
+        --c-sb:#06091a;--c-sb2:#0c1126;
+        --c-card:rgba(11,17,38,.88);--c-card2:rgba(16,24,52,.92);
+        --c-bdr:rgba(79,142,247,.18);--c-bdra:rgba(79,142,247,.55);
+        --c-t:#dce8ff;--c-t2:#8892b0;--c-t3:#3d4d80;
+        --c-a:#4f8ef7;--c-a2:#a78bfa;--c-a3:#f7c94f;
+        --c-glow:rgba(79,142,247,.25);
+        --c-met:rgba(12,20,50,.92);--c-inp:rgba(8,13,32,.85);
+        --c-shd:0 10px 40px rgba(0,0,0,.6);
+        --c-csh:0 4px 28px rgba(0,0,0,.45),0 0 1px rgba(79,142,247,.25);
+        --c-hero:linear-gradient(135deg,#4f8ef7 0%,#a78bfa 50%,#f7c94f 100%);
+        --c-pass:rgba(61,220,132,.1);--c-pt:#3ddc84;--c-pb:rgba(61,220,132,.4);
+        --c-fail:rgba(247,84,84,.1);--c-ft:#f75454;--c-fb:rgba(247,84,84,.4);
+        --c-demo:linear-gradient(90deg,rgba(247,196,79,.14),rgba(247,196,79,.04));
+        --c-dt:#f7c94f;--c-db:rgba(247,196,79,.4);--c-da:#f7c94f;
+        --c-lam:rgba(61,220,132,.16);--c-lt:#3ddc84;
+        --c-tra:rgba(247,196,79,.16);--c-tt:#f7c94f;
+        --c-tur:rgba(247,84,84,.16);--c-tut:#f75454;
+        --c-lim:rgba(167,139,250,.08);--c-limt:#a78bfa;--c-limb:rgba(167,139,250,.28);
+        --c-exp:rgba(6,11,28,.6);--c-code:#a5f3fc;
+        --c-st:#06090f;--c-sth:#1a2550;
+        --c-btn:linear-gradient(135deg,#3b6ff5,#5a3fcc);
+        --c-bth:linear-gradient(135deg,#5a86ff,#7a5fff);
+        --c-wb:rgba(247,196,79,.5);--c-wt:#f7c94f;--c-ib:rgba(247,84,84,.5);
+        """
+    else:
+        rv = """
+        --c-bg:#f0f5ff;--c-bg2:#e6effe;--c-bg3:#f4f8ff;
+        --c-sb:#f7faff;--c-sb2:#ebf2ff;
+        --c-card:rgba(255,255,255,.94);--c-card2:rgba(244,248,255,.97);
+        --c-bdr:rgba(37,99,235,.16);--c-bdra:rgba(37,99,235,.50);
+        --c-t:#0f172a;--c-t2:#475569;--c-t3:#94a3b8;
+        --c-a:#2563eb;--c-a2:#7c3aed;--c-a3:#d97706;
+        --c-glow:rgba(37,99,235,.18);
+        --c-met:rgba(235,244,255,.96);--c-inp:rgba(255,255,255,.92);
+        --c-shd:0 10px 40px rgba(37,99,235,.14);
+        --c-csh:0 4px 22px rgba(37,99,235,.1),0 1px 4px rgba(0,0,0,.06);
+        --c-hero:linear-gradient(135deg,#2563eb 0%,#7c3aed 50%,#d97706 100%);
+        --c-pass:rgba(22,163,74,.1);--c-pt:#15803d;--c-pb:rgba(22,163,74,.38);
+        --c-fail:rgba(220,38,38,.08);--c-ft:#dc2626;--c-fb:rgba(220,38,38,.32);
+        --c-demo:linear-gradient(90deg,rgba(217,119,6,.1),rgba(217,119,6,.03));
+        --c-dt:#b45309;--c-db:rgba(217,119,6,.32);--c-da:#d97706;
+        --c-lam:rgba(22,163,74,.12);--c-lt:#15803d;
+        --c-tra:rgba(217,119,6,.12);--c-tt:#b45309;
+        --c-tur:rgba(220,38,38,.12);--c-tut:#dc2626;
+        --c-lim:rgba(124,58,237,.07);--c-limt:#6d28d9;--c-limb:rgba(124,58,237,.22);
+        --c-exp:rgba(248,251,255,.88);--c-code:#0369a1;
+        --c-st:#dbeafe;--c-sth:#93c5fd;
+        --c-btn:linear-gradient(135deg,#2563eb,#7c3aed);
+        --c-bth:linear-gradient(135deg,#3b82f6,#8b5cf6);
+        --c-wb:rgba(217,119,6,.42);--c-wt:#b45309;--c-ib:rgba(220,38,38,.42);
+        """
+    bg = "135deg,var(--c-bg) 0%,var(--c-bg2) 50%,var(--c-bg3) 100%"
+    sb = "180deg,var(--c-sb) 0%,var(--c-sb2) 100%"
+    return f"""<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{{{rv}}}
+@keyframes gradientShift{{0%,100%{{background-position:0% 50%}}50%{{background-position:100% 50%}}}}
+@keyframes floatWave{{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(-8px) rotate(5deg)}}}}
+@keyframes slideUp{{from{{opacity:0;transform:translateY(20px)}}to{{opacity:1;transform:translateY(0)}}}}
+@keyframes textGlow{{0%,100%{{background-position:0% 50%}}50%{{background-position:100% 50%}}}}
+html,body,[class*="css"]{{font-family:'Plus Jakarta Sans','Inter',sans-serif!important}}
+.stApp{{background:linear-gradient({bg});background-size:300% 300%;animation:gradientShift 22s ease infinite}}
+section[data-testid="stSidebar"]{{background:linear-gradient({sb})!important;border-right:1px solid var(--c-bdr);backdrop-filter:blur(24px)}}
+section[data-testid="stSidebar"] label{{color:var(--c-t)!important;font-weight:500}}
+section[data-testid="stSidebar"] .stMarkdown p{{color:var(--c-t2)!important}}
+.ns-card{{background:var(--c-card);border:1px solid var(--c-bdr);border-radius:20px;padding:24px 28px;margin:12px 0;box-shadow:var(--c-csh);backdrop-filter:blur(18px);animation:slideUp .45s ease;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease;color:var(--c-t)}}
+.ns-card:hover{{transform:translateY(-3px);box-shadow:var(--c-shd);border-color:var(--c-bdra)}}
+.ns-card-accent{{border-left:4px solid var(--c-a)}}
+.hero-title{{font-family:'Plus Jakarta Sans',sans-serif!important;font-size:3.1rem;font-weight:800;background:var(--c-hero);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.12;margin-bottom:.4rem;animation:textGlow 5s ease infinite;letter-spacing:-.8px}}
+.hero-wave{{display:inline-block;animation:floatWave 3.2s ease-in-out infinite;-webkit-text-fill-color:initial}}
+.hero-sub{{font-size:1.08rem;color:var(--c-t2);margin-bottom:2rem;font-style:italic;opacity:.92}}
+.example-card{{background:var(--c-card);border:1px solid var(--c-bdr);border-radius:14px;padding:16px;cursor:pointer;transition:all .25s ease;backdrop-filter:blur(12px)}}
+.example-card:hover{{border-color:var(--c-a);box-shadow:0 0 24px var(--c-glow);transform:translateY(-3px)}}
+.example-title{{font-size:.95rem;font-weight:600;color:var(--c-t)}}
+.example-desc{{font-size:.80rem;color:var(--c-t2);margin-top:4px}}
+.assumption-badge{{display:inline-block;background:var(--c-pass);border:1px solid var(--c-pb);color:var(--c-pt);border-radius:20px;padding:4px 14px;margin:3px 4px;font-size:.82rem;font-weight:500;transition:transform .2s ease}}
+.assumption-badge:hover{{transform:scale(1.06)}}
+.flag-badge{{display:inline-block;background:var(--c-demo);border:1px solid var(--c-db);color:var(--c-dt);border-radius:8px;padding:4px 12px;margin:3px 0;font-size:.82rem;font-weight:500}}
+.metric-box{{background:var(--c-met);border:1px solid var(--c-bdr);border-radius:18px;padding:20px 22px;text-align:center;margin:6px 2px;backdrop-filter:blur(12px);transition:transform .3s ease,box-shadow .3s ease;animation:slideUp .5s ease}}
+.metric-box:hover{{transform:translateY(-4px);box-shadow:0 10px 28px var(--c-glow);border-color:var(--c-bdra)}}
+.metric-label{{font-size:.73rem;color:var(--c-t2);text-transform:uppercase;letter-spacing:1.8px;font-weight:600;margin-bottom:8px}}
+.metric-value{{font-size:1.65rem;font-weight:700;color:var(--c-a);font-family:'JetBrains Mono',monospace;line-height:1.2}}
+.metric-unit{{font-size:.78rem;color:var(--c-t3);margin-top:5px}}
+.verify-pass{{background:var(--c-pass);border:1px solid var(--c-pb);border-radius:14px;padding:16px 20px;color:var(--c-pt);animation:slideUp .4s ease}}
+.verify-fail{{background:var(--c-fail);border:1px solid var(--c-fb);border-radius:14px;padding:16px 20px;color:var(--c-ft);animation:slideUp .4s ease}}
+.demo-banner{{background:var(--c-demo);border:1px solid var(--c-db);border-left:4px solid var(--c-da);border-radius:12px;padding:12px 18px;margin-bottom:16px;color:var(--c-dt);font-size:.92rem;animation:slideUp .3s ease}}
+.validity-valid{{background:var(--c-pass);border:1px solid var(--c-pb);border-radius:14px;padding:16px 20px;color:var(--c-pt);font-size:.92rem}}
+.validity-warning{{background:var(--c-demo);border:1px solid var(--c-wb);border-left:4px solid var(--c-da);border-radius:14px;padding:16px 20px;color:var(--c-wt);font-size:.92rem}}
+.validity-invalid{{background:var(--c-fail);border:1px solid var(--c-ib);border-left:4px solid var(--c-ft);border-radius:14px;padding:16px 20px;color:var(--c-ft);font-size:.92rem}}
+.regime-badge-laminar{{background:var(--c-lam);border:1px solid var(--c-lt);color:var(--c-lt);border-radius:20px;padding:3px 14px;font-size:.82rem;font-weight:600}}
+.regime-badge-transitional{{background:var(--c-tra);border:1px solid var(--c-tt);color:var(--c-tt);border-radius:20px;padding:3px 14px;font-size:.82rem;font-weight:600}}
+.regime-badge-turbulent{{background:var(--c-tur);border:1px solid var(--c-tut);color:var(--c-tut);border-radius:20px;padding:3px 14px;font-size:.82rem;font-weight:600}}
+.limitation-box{{background:var(--c-lim);border:1px solid var(--c-limb);border-radius:14px;padding:16px 20px;color:var(--c-limt);font-size:.88rem;margin-top:16px;animation:slideUp .45s ease}}
+div[data-testid="stButton"]>button{{background:var(--c-btn)!important;color:white!important;border:none!important;border-radius:14px!important;padding:12px 32px!important;font-size:1rem!important;font-weight:700!important;letter-spacing:.4px!important;font-family:'Plus Jakarta Sans',sans-serif!important;transition:all .3s ease!important;width:100%!important;box-shadow:0 4px 18px var(--c-glow)!important}}
+div[data-testid="stButton"]>button:hover{{background:var(--c-bth)!important;box-shadow:0 8px 30px var(--c-glow)!important;transform:translateY(-2px)!important}}
+div[data-testid="stButton"]>button:active{{transform:translateY(0)!important}}
+.stTextArea textarea{{background:var(--c-inp)!important;border:1px solid var(--c-bdr)!important;border-radius:14px!important;color:var(--c-t)!important;font-family:'Plus Jakarta Sans',sans-serif!important;font-size:.96rem!important;padding:14px 16px!important;transition:border-color .3s ease,box-shadow .3s ease!important;backdrop-filter:blur(12px)!important}}
+.stTextArea textarea:focus{{border-color:var(--c-a)!important;box-shadow:0 0 0 3px var(--c-glow)!important}}
+.stSelectbox>div>div{{background:var(--c-inp)!important;border:1px solid var(--c-bdr)!important;border-radius:10px!important;color:var(--c-t)!important}}
+.streamlit-expanderHeader{{background:var(--c-card)!important;border-radius:14px!important;border:1px solid var(--c-bdr)!important;color:var(--c-t)!important;font-weight:600!important;transition:border-color .25s ease!important;padding:12px 16px!important}}
+.streamlit-expanderHeader:hover{{border-color:var(--c-a)!important}}
+.streamlit-expanderContent{{background:var(--c-exp)!important;border:1px solid var(--c-bdr)!important;border-top:none!important;border-radius:0 0 14px 14px!important;backdrop-filter:blur(12px)!important;padding:16px!important}}
+hr{{border-color:var(--c-bdr)!important;opacity:.6;margin:1.2rem 0}}
+.eq-scroll{{overflow-x:auto;max-width:100%}}
+::-webkit-scrollbar{{width:6px;height:6px}}
+::-webkit-scrollbar-track{{background:var(--c-st);border-radius:10px}}
+::-webkit-scrollbar-thumb{{background:var(--c-sth);border-radius:10px}}
+::-webkit-scrollbar-thumb:hover{{background:var(--c-a)}}
+.stMarkdown p{{color:var(--c-t2);line-height:1.65}}
+.stMarkdown h1,.stMarkdown h2,.stMarkdown h3,.stMarkdown h4{{color:var(--c-t)!important;font-family:'Plus Jakarta Sans',sans-serif!important}}
+.stMarkdown strong{{color:var(--c-t)!important}}
+code,pre{{background:var(--c-met)!important;border:1px solid var(--c-bdr)!important;border-radius:8px!important;color:var(--c-code)!important;font-family:'JetBrains Mono',monospace!important}}
+.stAlert{{border-radius:12px!important}}
+.katex,.katex-display{{color:var(--c-t)!important}}
+</style>"""
 
-    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    /* ── Background ── */
-    .stApp { background: linear-gradient(135deg, #0a0d1a 0%, #0f1529 50%, #0a1020 100%); }
-
-    /* ── Sidebar ── */
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0d1022 0%, #111628 100%);
-        border-right: 1px solid #1e2340;
-    }
-
-    /* ── Cards ── */
-    .ns-card {
-        background: linear-gradient(135deg, #12172a 0%, #1a2040 100%);
-        border: 1px solid #1e2d60;
-        border-radius: 16px;
-        padding: 24px 28px;
-        margin: 12px 0;
-        box-shadow: 0 4px 24px rgba(79,142,247,0.08);
-    }
-    .ns-card-accent {
-        border-left: 4px solid #4f8ef7;
-    }
-
-    /* ── Hero title ── */
-    .hero-title {
-        font-size: 2.8rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #4f8ef7, #a78bfa, #f7c94f);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        line-height: 1.2;
-        margin-bottom: 0.3rem;
-    }
-    .hero-sub {
-        font-size: 1.05rem;
-        color: #8892b0;
-        margin-bottom: 2rem;
-        font-style: italic;
-    }
-
-    /* ── Example cards ── */
-    .example-card {
-        background: linear-gradient(135deg, #13182e 0%, #1c2444 100%);
-        border: 1px solid #1e2d60;
-        border-radius: 12px;
-        padding: 16px;
-        margin: 6px 0;
-        cursor: pointer;
-        transition: all 0.25s ease;
-    }
-    .example-card:hover {
-        border-color: #4f8ef7;
-        box-shadow: 0 0 20px rgba(79,142,247,0.20);
-    }
-    .example-title { font-size: 0.95rem; font-weight: 600; color: #ccd6f6; }
-    .example-desc  { font-size: 0.80rem; color: #7888aa; margin-top: 4px; }
-
-    /* ── Assumption badges ── */
-    .assumption-badge {
-        display: inline-block;
-        background: rgba(61,220,132,0.12);
-        border: 1px solid rgba(61,220,132,0.3);
-        color: #3ddc84;
-        border-radius: 20px;
-        padding: 4px 12px;
-        margin: 3px 4px;
-        font-size: 0.82rem;
-    }
-
-    /* ── Flag badges ── */
-    .flag-badge {
-        display: inline-block;
-        background: rgba(247,196,79,0.12);
-        border: 1px solid rgba(247,196,79,0.3);
-        color: #f7c94f;
-        border-radius: 8px;
-        padding: 4px 10px;
-        margin: 3px 0;
-        font-size: 0.82rem;
-    }
-
-    /* ── Result metric boxes ── */
-    .metric-box {
-        background: linear-gradient(135deg, #151c35 0%, #1d2648 100%);
-        border: 1px solid #2a3560;
-        border-radius: 10px;
-        padding: 14px 18px;
-        text-align: center;
-        margin: 6px 2px;
-    }
-    .metric-label { font-size: 0.78rem; color: #7888aa; text-transform: uppercase; letter-spacing: 1px; }
-    .metric-value { font-size: 1.5rem; font-weight: 700; color: #4f8ef7; font-family: 'JetBrains Mono', monospace; }
-    .metric-unit  { font-size: 0.78rem; color: #5566aa; }
-
-    /* ── Verification ── */
-    .verify-pass {
-        background: rgba(61,220,132,0.10);
-        border: 1px solid rgba(61,220,132,0.4);
-        border-radius: 10px;
-        padding: 14px;
-        color: #3ddc84;
-    }
-    .verify-fail {
-        background: rgba(247,84,84,0.10);
-        border: 1px solid rgba(247,84,84,0.4);
-        border-radius: 10px;
-        padding: 14px;
-        color: #f75454;
-    }
-
-    /* ── Demo mode banner ── */
-    .demo-banner {
-        background: linear-gradient(90deg, rgba(247,196,79,0.15), rgba(247,196,79,0.05));
-        border: 1px solid rgba(247,196,79,0.4);
-        border-radius: 10px;
-        padding: 10px 16px;
-        margin-bottom: 16px;
-        color: #f7c94f;
-        font-size: 0.9rem;
-    }
-
-    /* ── Physical validity boxes ── */
-    .validity-valid {
-        background: rgba(61,220,132,0.10);
-        border: 1px solid rgba(61,220,132,0.4);
-        border-radius: 10px;
-        padding: 14px 18px;
-        color: #3ddc84;
-        font-size: 0.92rem;
-    }
-    .validity-warning {
-        background: rgba(247,196,79,0.12);
-        border: 1px solid rgba(247,196,79,0.5);
-        border-left: 4px solid #f7c94f;
-        border-radius: 10px;
-        padding: 14px 18px;
-        color: #f7c94f;
-        font-size: 0.92rem;
-    }
-    .validity-invalid {
-        background: rgba(247,84,84,0.12);
-        border: 1px solid rgba(247,84,84,0.5);
-        border-left: 4px solid #f75454;
-        border-radius: 10px;
-        padding: 14px 18px;
-        color: #f75454;
-        font-size: 0.92rem;
-    }
-    /* ── Regime badge ── */
-    .regime-badge-laminar    { background: rgba(61,220,132,0.18); border: 1px solid #3ddc84; color: #3ddc84; border-radius: 20px; padding: 3px 14px; font-size: 0.82rem; font-weight: 600; }
-    .regime-badge-transitional { background: rgba(247,196,79,0.18); border: 1px solid #f7c94f; color: #f7c94f; border-radius: 20px; padding: 3px 14px; font-size: 0.82rem; font-weight: 600; }
-    .regime-badge-turbulent  { background: rgba(247,84,84,0.18); border: 1px solid #f75454; color: #f75454; border-radius: 20px; padding: 3px 14px; font-size: 0.82rem; font-weight: 600; }
-
-    /* ── Limitation notice ── */
-    .limitation-box {
-        background: rgba(167,139,250,0.08);
-        border: 1px solid rgba(167,139,250,0.3);
-        border-radius: 10px;
-        padding: 14px;
-        color: #a78bfa;
-        font-size: 0.88rem;
-        margin-top: 16px;
-    }
-
-    /* ── Solve button ── */
-    div[data-testid="stButton"] > button {
-        background: linear-gradient(135deg, #3b6ff5, #5a3fcc);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 12px 32px;
-        font-size: 1rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-    div[data-testid="stButton"] > button:hover {
-        background: linear-gradient(135deg, #5a86ff, #7a5fff);
-        box-shadow: 0 6px 24px rgba(79,142,247,0.40);
-        transform: translateY(-1px);
-    }
-
-    /* Expander headers */
-    .streamlit-expanderHeader {
-        background: #12172a !important;
-        border-radius: 8px !important;
-    }
-
-    /* ── Divider ── */
-    hr { border-color: #1e2340; }
-
-    /* ── Scrollable equation area ── */
-    .eq-scroll { overflow-x: auto; max-width: 100%; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+st.markdown(_get_css(st.session_state.theme), unsafe_allow_html=True)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -356,6 +279,23 @@ def dispatch_solver(params: dict) -> SolutionResult:
 # ─────────────────────────────────────────────────────────────────────────────
 
 with st.sidebar:
+    # ── Theme Toggle
+    _dark = st.session_state.theme == "dark"
+    st.markdown(
+        ('<div style="text-align:center;padding:12px 0 8px;font-size:1rem;font-weight:700;">'
+         + ('🌙 Dark Mode' if _dark else '☀️ Light Mode') + '</div>'),
+        unsafe_allow_html=True,
+    )
+    _t1, _t2 = st.columns(2)
+    with _t1:
+        if st.button("🌙 Dark", key="btn_theme_dark", use_container_width=True):
+            st.session_state.theme = "dark"
+            st.rerun()
+    with _t2:
+        if st.button("☀️ Light", key="btn_theme_light", use_container_width=True):
+            st.session_state.theme = "light"
+            st.rerun()
+    st.markdown("---")
     st.markdown("## ⚙️ Model Settings")
     st.markdown("---")
 
@@ -423,7 +363,7 @@ with st.sidebar:
 # ─────────────────────────────────────────────────────────────────────────────
 
 st.markdown(
-    '<div class="hero-title">🌊 LLM Navier–Stokes Solver</div>'
+    '<div class="hero-title"><span class="hero-wave">🌊</span> LLM Navier–Stokes Solver</div>'
     '<div class="hero-sub">'
     "Ask a fluid mechanics problem. Let the LLM interpret it. Let mathematics verify it."
     "</div>",

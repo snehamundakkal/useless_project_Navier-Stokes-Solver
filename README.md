@@ -164,7 +164,13 @@ The following screenshots show the main interface of **TinkerFluid** in dark mod
 
 ### Project Demo
 #### Video
-[Demo video coming soon]
+<div align="center">
+
+<a href="https://drive.google.com/file/d/1fhm9pOzI5zRyonuV07ZigC2ZUmkOGHbF/view?usp=drivesdk">
+  <img src="https://img.shields.io/badge/▶️%20Watch%20Demo-TinkerFluid-blueviolet?style=for-the-badge" alt="Watch TinkerFluid Demo">
+</a>
+
+</div>
 *Full walkthrough of entering a fluid problem, watching the LLM extract parameters, the solver compute results, and the verification system confirm accuracy.*
 
 #### Additional Demos

@@ -3,6 +3,7 @@ llm/client.py
 =============
 LLM API abstraction layer.
 Supports OpenAI API. Falls back to Demo Mode if no API key is configured.
+Works on both local (.env) and Streamlit Cloud (st.secrets).
 """
 
 import os
@@ -21,21 +22,37 @@ from llm.parser import parse_llm_response, extract_parameters_for_solver
 
 load_dotenv()
 
+
+def _get_secret(key: str, default: str = "") -> str:
+    """
+    Read a secret from st.secrets (Streamlit Cloud) first,
+    then fall back to os.environ / .env (local development).
+    """
+    try:
+        import streamlit as st
+        val = st.secrets.get(key, None)
+        if val:
+            return str(val)
+    except Exception:
+        pass
+    return os.getenv(key, default)
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Configuration
 # ─────────────────────────────────────────────────────────────────────────────
 
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "openai").lower()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-DEMO_MODE_ENV = os.getenv("DEMO_MODE", "false").lower() == "true"
+LLM_PROVIDER = _get_secret("LLM_PROVIDER", "openai").lower()
+OPENAI_API_KEY = _get_secret("OPENAI_API_KEY", "")
+OPENAI_MODEL = _get_secret("OPENAI_MODEL", "gpt-4o-mini")
+DEMO_MODE_ENV = _get_secret("DEMO_MODE", "false").lower() == "true"
 
 
 def is_demo_mode() -> bool:
     """Return True if the app should run in Demo Mode (no LLM API calls)."""
-    if DEMO_MODE_ENV:
+    if _get_secret("DEMO_MODE", "false").lower() == "true":
         return True
-    if not OPENAI_API_KEY or OPENAI_API_KEY.startswith("your_"):
+    api_key = _get_secret("OPENAI_API_KEY", "")
+    if not api_key or api_key.startswith("your_"):
         return True
     return False
 
@@ -57,8 +74,8 @@ def _call_openai(messages: list, temperature: float = 0.1,
     except ImportError:
         return "", "openai package not installed. Run: pip install openai"
 
-    client = OpenAI(api_key=OPENAI_API_KEY)
-    used_model = model or OPENAI_MODEL
+    client = OpenAI(api_key=_get_secret("OPENAI_API_KEY", ""))
+    used_model = model or _get_secret("OPENAI_MODEL", "gpt-4o-mini")
 
     for attempt in range(max_retries + 1):
         try:

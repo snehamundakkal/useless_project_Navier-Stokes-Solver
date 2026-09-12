@@ -166,7 +166,7 @@ The following screenshots show the main interface of **TinkerFluid** in dark mod
 #### Video
 <div align="center">
 
-<a href="https://drive.google.com/file/d/1fhm9pOzI5zRyonuV07ZigC2ZUmkOGHbF/view?usp=drivesdk">
+<a href="https://drive.google.com/file/d/1WWx2VDSEKwN098aoPt70sC_8ELUKuzxU/view?usp=drivesdk">
   <img src="https://img.shields.io/badge/▶️%20Watch%20Demo-TinkerFluid-blueviolet?style=for-the-badge" alt="Watch TinkerFluid Demo">
 </a>
 

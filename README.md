@@ -83,7 +83,7 @@ For Software:
 
 #### Screenshots
 
-![Main UI - Dark Mode](https://github.com/user-attachments/assets/8920b256-2ba8-4988-b824-5351134eb4bd)
+![Main UI - Dark Mode](images/)
 *The main interface in dark mode — hero title with animated gradient, example problem cards, and the problem input area*
 
 #### Architecture Diagram
@@ -149,9 +149,9 @@ For Software:
 - Demo Mode works without any API key — just toggle it in the sidebar
 
 ## Team Contributions
-- **Team Lead:** App architecture, solver integration, Streamlit UI design, dark/light theme system
-- **Sneha Nair:** LLM client integration, prompt engineering, parameter extraction pipeline, verification module
-- **Stephin Arnold Raj S:** SymPy equation solver, numerical validation, visualization module, PINN experiments
+- **Sneha Nair:** App architecture, solver integration,SymPy equation solver, numerical validation Streamlit UI design, dark/light theme system
+- **Stephin Arnold Raj S:** LLM client integration, prompt engineering, parameter extraction pipeline, verification module, visualization module, PINN experiments
+
 
 ---
 Made with ❤️ at TinkerHub Useless Projects 

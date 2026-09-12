@@ -83,12 +83,31 @@ For Software:
 
 #### Screenshots
 
-![Main UI - Dark Mode](images/Screenshot 2026-09-12 082523.png)
-![Main UI - Dark Mode](images/Screenshot 2026-09-12 082709.png)
-![Main UI - Dark Mode](images/Screenshot 2026-09-12 082739.png)
-![Main UI - Dark Mode](images/Screenshot 2026-09-12 082853.png)
-![Main UI - Dark Mode](images/Screenshot 2026-09-12 082910.png)
-*The main interface in dark mode — hero title with animated gradient, example problem cards, and the problem input area*
+The following screenshots show the main interface of **TinkerFluid** in dark mode, including the hero section, example problems, problem input, solver options, and generated results.
+
+<div align="center">
+
+<img src="images/Screenshot%202026-09-12%20082523.png" alt="TinkerFluid Main UI - Dark Mode" width="900">
+
+<br><br>
+
+<img src="images/Screenshot%202026-09-12%20082709.png" alt="TinkerFluid Problem Input - Dark Mode" width="900">
+
+<br><br>
+
+<img src="images/Screenshot%202026-09-12%20082739.png" alt="TinkerFluid Solver Interface - Dark Mode" width="900">
+
+<br><br>
+
+<img src="images/Screenshot%202026-09-12%20082853.png" alt="TinkerFluid Solution View - Dark Mode" width="900">
+
+<br><br>
+
+<img src="images/Screenshot%202026-09-12%20082910.png" alt="TinkerFluid Results and Visualization - Dark Mode" width="900">
+
+</div>
+
+*The TinkerFluid interface in dark mode — featuring the animated hero section, example fluid mechanics problems, natural-language problem input, AI-powered parameter extraction, deterministic solving, and visualization.*
 
 #### Architecture Diagram
 ```
